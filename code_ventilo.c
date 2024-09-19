@@ -192,51 +192,74 @@ void loop(){
     seg7_4.display((float)ultrasonic_3.distanceCm());
 
     // Verifie si l'utilisateur descend le joystick vers le bas, (correspond a la commande pour aller modifier les distances d'arrets et de ralentissment)
-    if((joystick_6.read(2)) < (-440)){
+    if((joystick_6.read(2)) < (-440)){ // read(2) pour l'axe vertical
+        // Met la vitesse du moteur à 0, car pendant la modification des valeurs le moteur doit être à l'arret
         motor_9.run(0);
+        // Eteint les lumiers (LED gauche et droite) pour indiquer que le ventilateur ne tourne pas
         rgbled_7.setColor(1,0,0,0);
         rgbled_7.show();
         rgbled_7.setColor(3,0,0,0);
         rgbled_7.show();
+        
+        // Remande à l'utilisateur de configurer les distances d'arrêts et de ralentissement
         SetUpStopDistance();
         SetUpSlowDistance();
-        rgbled_7.setColor(2,0,255,0);
-        rgbled_7.show();
-        rgbled_7.setColor(4,0,255,0);
-        rgbled_7.show();
-    }
-    rgbled_7.setColor(1,255,0,0);
-    rgbled_7.show();
-    rgbled_7.setColor(3,255,0,0);
-    rgbled_7.show();
-    if((ultrasonic_3.distanceCm()) < (stopDistance)){
+
+        // Eteint les lumières pour dire que la configuration des distances est terminée (LED gauche et droite)
         rgbled_7.setColor(2,0,0,0);
         rgbled_7.show();
         rgbled_7.setColor(4,0,0,0);
         rgbled_7.show();
-        motor_9.run(0);
+    }
+
+    // Allume les LED ()
+    rgbled_7.setColor(1,255,0,0);
+    rgbled_7.show();
+    rgbled_7.setColor(3,255,0,0);
+    rgbled_7.show();
+    
+    // Vérification des distances et changement de vitesse du moteur en fonction
+
+    // Si distance inférieur a la distance d'arrêt, alors arrêt total du moteur 
+    if((ultrasonic_3.distanceCm()) < (stopDistance)){
+        motor_9.run(0); // arret du moteur
+        
+        // Met les lumieres en rouge pour indiquer l'arret du moteur
+        rgbled_7.setColor(2,255,0,0);
+        rgbled_7.show();
+        rgbled_7.setColor(4,255,0,0);
+        rgbled_7.show();
     }else{
+        // Sinon si distance inférieur a la distance de ralentissement, alors arrêt partiel du moteur 
         if((ultrasonic_3.distanceCm()) < (slowDistance)){
-            motor_9.run(45);
+            motor_9.run(45); // moitié de la vitesse classique du moteur
+
+            // Led (haut et bas) en violet pour indiquer le ralentissement du ventilateur et la présence d'un objet proche
             rgbled_7.setColor(1,217,5,255);
             rgbled_7.show();
             rgbled_7.setColor(3,217,5,255);
             rgbled_7.show();
         }else{
+            // Fonctionnement classique du moteur à pleine vitesse 
             motor_9.run(90);
+
+            // Led (haut et bas) allumé en vert pour indiquer le fonctionnement à pleine vitesse du ventilateur
             rgbled_7.setColor(1,0,255,0);
             rgbled_7.show();
             rgbled_7.setColor(3,0,255,0);
             rgbled_7.show();
         }
     }
+    // Appel la meme fonction de manière à faire une boucle
     _loop();
 }
 
+// Permet d'attendre un temps en secodne
 void _delay(float seconds){
     long endTime = millis() + seconds * 1000;
     while(millis() < endTime)_loop();
 }
 
+// Appel une première fois la boucle
 void _loop(){
 }
