@@ -1,3 +1,7 @@
+/* préambule :
+
+*/
+
 #include <Arduino.h>
 #include <Wire.h>
 #include <SoftwareSerial.h>
@@ -69,20 +73,35 @@ void ChangeStopDistance(double count)
 // Fonction appelée quand l'utilisateur veut modifie la distance de ralentissement
 void SetUpSlowDistance()
 {
-    // Change la couleur des LEDs pour informer l'utilisateur de la modification de la LED
+    // Change la couleur des LEDs pour informer l'utilisateur de la modification de la distance de ralentissment
+
+    // Allume la led 2 et 4 (haut et bas) avec du orange
     rgbled_7.setColor(2,255,217,5);
     rgbled_7.show();
     rgbled_7.setColor(4,255,217,5);
     rgbled_7.show();
+
+    // Lors de l'appel de cette fonction, la variable va être remise dans 
     ChangeSlowDistance(0);
+
+    // Attend 1 seconde pour que le joystick soit redescendu, sinon il va détecter la validation de l'utilsateur alors que c'est celle d'avant
     _delay(1);
+
+    // Execute le code tant que l'utilsateur n'a pas mis le joystick vers le haut, ce qui correspond à une validation
     while(!((joystick_6.read(2)) > (440)))
     {
         _loop();
+        // Attend 0.1 sec, ce qui permet que le code s'execute environ 10 fois par seconde (sans prendre en compte le temps de calcul qui est négligeable ici)
+        // L'executé 10 fois par seconde permet d'ajouter une valeur constant chaque seconde : si a chaque itération on ajoute 1, on sait que au bout d'une seconde, la valeur aura augmenté de 10
+
         _delay(0.1);
+
+        // Affiche à l'utilisateur la valeur de distance de ralentissement
         seg7_4.display((float)slowDistance);
-        if((joystick_6.read(1)) > (440)){
-            ChangeSlowDistance(0.5);
+
+        // Le joystick a fond vers la droite donne une valeur de 490 en x, ici nous utilisons 440 comme valeur plus haute, puisque le joystick est peu précis et que s'il est legerement vers le haut, la valeur de x diminue legerement
+        if((joystick_6.read(1)) > (440)){ // read(1) permet de lire sur l'axe x (horizontalement)
+            ChangeSlowDistance(0.5); // ajout de 0.5 cm pour la distance de ralentissement (soit 5 cm, par seconde)
         }else{
             if((joystick_6.read(1)) > (220)){
                 ChangeSlowDistance(0.2);
@@ -92,6 +111,8 @@ void SetUpSlowDistance()
                 }
             }
         }
+
+        // meme chose que précedemment mais quand le joystick est déplacé vers la droite
         if((joystick_6.read(1)) < (-440)){
             ChangeSlowDistance(-0.5);
         }else{
@@ -107,6 +128,7 @@ void SetUpSlowDistance()
     seg7_4.display((float)slowDistance);
 }
 
+// Fonctionnement très similaire a la fonction précedente, mais cette fois pour la distance d'arret
 void SetUpStopDistance()
 {
     rgbled_7.setColor(2,255,0,0);
@@ -144,23 +166,32 @@ void SetUpStopDistance()
     seg7_4.display((float)stopDistance);
 }
 
+// premiere fonction qui va être appelée quand l'arduino commence à executer ce programme
 void setup(){
+    // Desactive le moteur (non nécessaire)
     motor_9.run(0);
-    rgbled_7.setColor(1,0,0,0);
+
+    // Desactive les LEDs (non nécessaire)
+    rgbled_7.setColor(1,0,0,0); // LED 1
     rgbled_7.show();
-    rgbled_7.setColor(3,0,0,0);
+    rgbled_7.setColor(3,0,0,0); // LED 3
     rgbled_7.show();
-    Initialisation();
-    SetUpStopDistance();
-    SetUpSlowDistance();
-    rgbled_7.setColor(2,0,255,0);
+    rgbled_7.setColor(2,0,0,0); // LED 2
     rgbled_7.show();
-    rgbled_7.setColor(4,0,255,0);
+    rgbled_7.setColor(4,0,0,0); // LED 4
     rgbled_7.show();
+
+    Initialisation(); // Fonction qui met les variables avec les bonnes valeurs
+    
+    SetUpStopDistance(); // Demande à l'utilisateur la distance d'arrêt
+    SetUpSlowDistance(); // Demande à l'utilisateur la distance de ralentissement
 }
 
 void loop(){
+    // Affiche à l'utilisateur la distance capté par le capteur ultrason sur l'afficheur 7 segment
     seg7_4.display((float)ultrasonic_3.distanceCm());
+
+    // Verifie si l'utilisateur descend le joystick vers le bas, (correspond a la commande pour aller modifier les distances d'arrets et de ralentissment)
     if((joystick_6.read(2)) < (-440)){
         motor_9.run(0);
         rgbled_7.setColor(1,0,0,0);
