@@ -1,5 +1,7 @@
 /* préambule :
-
+Récapitulatif : Programme écrit en C généré à l'aide de mBlock.
+Ventilateur avec capteur pour avoir la distance, si un objet se trouve à proximité du ventilateur, la vitesse est réduite.
+Lorsque l'objet est très proche  
 */
 
 #include <Arduino.h>
@@ -41,11 +43,11 @@ void ChangeSlowDistance(double count)
 {
     slowDistance += count;
 
-    // Verifie si 'slowDistance' ne depasse pas la limite (80)
+    // Vérifie si 'slowDistance' ne dépasse pas la limite (80)
     if((slowDistance) > (80)){
         slowDistance = 80;
     }else{
-        // Verifie si 'slowDistance' ne descend pas en dessous la limite (20)
+        // Vérifie si 'slowDistance' ne descend pas en dessous la limite (20)
         if((slowDistance) < (20)){
             slowDistance = 20;
         }
@@ -56,7 +58,7 @@ void ChangeSlowDistance(double count)
     }
 }
 
-// Fonction de changement de la distance d'arret et vérification des bornes
+// Fonction de changement de la distance d'arrêt et vérification des bornes
 void ChangeStopDistance(double count)
 {
     stopDistance += count;
@@ -87,12 +89,12 @@ void SetUpSlowDistance()
     // Attend 1 seconde pour que le joystick soit redescendu, sinon il va détecter la validation de l'utilsateur alors que c'est celle d'avant
     _delay(1);
 
-    // Execute le code tant que l'utilsateur n'a pas mis le joystick vers le haut, ce qui correspond à une validation
+    // Execute le code tant que l'utilisateur n'a pas mis le joystick vers le haut, ce qui correspond à une validation
     while(!((joystick_6.read(2)) > (440)))
     {
         _loop();
         // Attend 0.1 sec, ce qui permet que le code s'execute environ 10 fois par seconde (sans prendre en compte le temps de calcul qui est négligeable ici)
-        // L'executé 10 fois par seconde permet d'ajouter une valeur constant chaque seconde : si a chaque itération on ajoute 1, on sait que au bout d'une seconde, la valeur aura augmenté de 10
+        // L'executer 10 fois par seconde permet d'ajouter une valeur constant chaque seconde : si a chaque itération on ajoute 1, on sait que au bout d'une seconde, la valeur aura augmenté de 10
 
         _delay(0.1);
 
@@ -112,7 +114,7 @@ void SetUpSlowDistance()
             }
         }
 
-        // meme chose que précedemment mais quand le joystick est déplacé vers la droite
+        // meme chose que précédemment mais quand le joystick est déplacé vers la droite
         if((joystick_6.read(1)) < (-440)){
             ChangeSlowDistance(-0.5);
         }else{
@@ -128,7 +130,7 @@ void SetUpSlowDistance()
     seg7_4.display((float)slowDistance);
 }
 
-// Fonctionnement très similaire a la fonction précedente, mais cette fois pour la distance d'arret
+// Fonctionnement très similaire a la fonction précédente, mais cette fois pour la distance d'arret
 void SetUpStopDistance()
 {
     rgbled_7.setColor(2,255,0,0);
@@ -168,10 +170,10 @@ void SetUpStopDistance()
 
 // premiere fonction qui va être appelée quand l'arduino commence à executer ce programme
 void setup(){
-    // Desactive le moteur (non nécessaire)
+    // Désactive le moteur (non nécessaire)
     motor_9.run(0);
 
-    // Desactive les LEDs (non nécessaire)
+    // Désactive les LEDs (non nécessaire)
     rgbled_7.setColor(1,0,0,0); // LED 1
     rgbled_7.show();
     rgbled_7.setColor(3,0,0,0); // LED 3
@@ -191,17 +193,17 @@ void loop(){
     // Affiche à l'utilisateur la distance capté par le capteur ultrason sur l'afficheur 7 segment
     seg7_4.display((float)ultrasonic_3.distanceCm());
 
-    // Verifie si l'utilisateur descend le joystick vers le bas, (correspond a la commande pour aller modifier les distances d'arrets et de ralentissment)
+    // Vérifie si l'utilisateur descend le joystick vers le bas, (correspond a la commande pour aller modifier les distances d'arrets et de ralentissment)
     if((joystick_6.read(2)) < (-440)){ // read(2) pour l'axe vertical
         // Met la vitesse du moteur à 0, car pendant la modification des valeurs le moteur doit être à l'arret
         motor_9.run(0);
-        // Eteint les lumiers (LED gauche et droite) pour indiquer que le ventilateur ne tourne pas
+        // Eteint les lumières (LED gauche et droite) pour indiquer que le ventilateur ne tourne pas
         rgbled_7.setColor(1,0,0,0);
         rgbled_7.show();
         rgbled_7.setColor(3,0,0,0);
         rgbled_7.show();
         
-        // Remande à l'utilisateur de configurer les distances d'arrêts et de ralentissement
+        // Demande à l'utilisateur de configurer les distances d'arrêts et de ralentissement
         SetUpStopDistance();
         SetUpSlowDistance();
 
@@ -222,9 +224,9 @@ void loop(){
 
     // Si distance inférieur a la distance d'arrêt, alors arrêt total du moteur 
     if((ultrasonic_3.distanceCm()) < (stopDistance)){
-        motor_9.run(0); // arret du moteur
+        motor_9.run(0); // arrêt du moteur
         
-        // Met les lumieres en rouge pour indiquer l'arret du moteur
+        // Met les lumières en rouge pour indiquer l'arrêt du moteur
         rgbled_7.setColor(2,255,0,0);
         rgbled_7.show();
         rgbled_7.setColor(4,255,0,0);
@@ -254,7 +256,7 @@ void loop(){
     _loop();
 }
 
-// Permet d'attendre un temps en secodne
+// Permet d'attendre un temps en seconde
 void _delay(float seconds){
     long endTime = millis() + seconds * 1000;
     while(millis() < endTime)_loop();
