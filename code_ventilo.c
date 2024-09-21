@@ -25,11 +25,11 @@ double stopDistance;
 double slowDistance;
 
 // Initialisation des différents capteurs et actionneurs 
-MeRGBLed rgbled_7(7, 4); // 4 leds RGB
-MeJoystick joystick_6(6); // Joystick
-Me7SegmentDisplay seg7_4(4); //afficheur 7 segment
-MeDCMotor motor_9(9); // moteur
-MeUltrasonicSensor ultrasonic_3(3);  // capteur ultrasons
+MeRGBLed rgbled_7(7, 4); // 4 leds RGB (Port 7)
+MeJoystick joystick_6(6); // Joystick (Port 6)
+Me7SegmentDisplay seg7_4(4); //afficheur 7 segment (Port 4)
+MeDCMotor motor_9(9); // moteur (Port 9 (M1))
+MeUltrasonicSensor ultrasonic_3(3);  // capteur ultrasons (Port 3)
 
 // Définir les valeurs par défaut de la distance d'arrêt et de ralentissement
 void Initialisation()
@@ -106,7 +106,7 @@ void SetUpSlowDistance()
             ChangeSlowDistance(0.5); // ajout de 0.5 cm pour la distance de ralentissement (soit 5 cm, par seconde)
         }else{
             if((joystick_6.read(1)) > (220)){
-                ChangeSlowDistance(0.2);
+                ChangeSlowDistance(0.2); 
             }else{
                 if((joystick_6.read(1)) > (110)){
                     ChangeSlowDistance(0.05);
