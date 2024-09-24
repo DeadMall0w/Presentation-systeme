@@ -1,7 +1,20 @@
 /* préambule :
 Récapitulatif : Programme écrit en C généré à l'aide de mBlock.
-Ventilateur avec capteur pour avoir la distance, si un objet se trouve à proximité du ventilateur, la vitesse est réduite.
-Lorsque l'objet est très proche  
+Fonctionnement : Ventilateur avec capteur de distance, si un objet se trouve à proximité du ventilateur, la vitesse est réduite.
+Lorsqu'un objet est très proche le ventilateur s'arrête complètement.
+L'utilisateur peut modifier ces distances, lors de l'allumage ou en baissant le joystick vers le bas
+
+Retour utilisateur : 4 LEDs sont là pour indiquer l'état de fonctionnement du système
+LEDs verticales (droite et gauche) -> indiquent l'état de fonctionnement du ventilateur
+- Vert : Fonctionnement du ventilateur à pleine vitesse et absence d'objet proche
+- Violet : Fonctionnement du ventilateur à vitesse moyenne et présence d'objet proche
+- Rouge : Ventilateur à l'arrêt à cause d'un objet trop proche
+- Eteint : Ventilateur éteint
+
+LED horizontales (haut et bas) -> indiquent l'état de modification des distances limites
+- Rouge : configuration de la distance d'arrêt
+- Orange : configuration de la distance de ralentissement
+- Eteint : aucune configuration active
 */
 
 #include <Arduino.h>
