@@ -12,9 +12,9 @@ LEDs verticales (droite et gauche) -> indiquent l'état de fonctionnement du ven
 - Eteint : Ventilateur éteint
 
 LED horizontales (haut et bas) -> indiquent l'état de modification des distances limites
-- Rouge : configuration de la distance d'arrêt
-- Orange : configuration de la distance de ralentissement
-- Eteint : aucune configuration active
+- Rouge : Configuration de la distance d'arrêt
+- Orange : Configuration de la distance de ralentissement
+- Eteint : Aucune configuration active
 */
 
 #include <Arduino.h>
