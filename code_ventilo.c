@@ -38,7 +38,7 @@ double stopDistance;
 double slowDistance;
 
 // Initialisation des différents capteurs et actionneurs 
-MeRGBLed rgbled_7(7, 4); // 4 leds RGB (Port 7)
+MeRGBLed rgbled_7(7, 4); // 4 LEDs RGB (Port 7)
 MeJoystick joystick_6(6); // Joystick (Port 6)
 Me7SegmentDisplay seg7_4(4); //afficheur 7 segment (Port 4)
 MeDCMotor motor_9(9); // moteur (Port 9 (M1))
